@@ -19,6 +19,8 @@ def create_app(test_config=None):
 
 	# ensure the instance folder exists
 	try: 
+		# Flask doesn’t create the instance folder automatically, 
+		# but it needs to be created because your project will create the SQLite database file there.
 		os.makedirs(app.instance_path)
 	except OSError:
 		pass
@@ -26,6 +28,13 @@ def create_app(test_config=None):
 	@app.route('/hello')
 	def hello():
 		return "Hello, World!"
+
+	from . import db 
+	from . import auth
+
+	db.init_app(app)
+	app.register_blueprint(auth.bp)
+	
 	return app 
 
 
